@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Classic Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Classic">
+<meta name="theme-color" content="#0D0B07">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  html, body { height: 100%; margin: 0; background: #0D0B07; }
+  #app {
+    position: fixed; inset: 0; width: 100%; height: 100%;
+    border: 0; background: #0D0B07; opacity: 0; transition: opacity .25s ease;
+  }
+  #app.ready { opacity: 1; }
+  #splash {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 14px;
+    background: #0D0B07; color: #C9A227;
+    font: 600 15px/1.4 -apple-system, system-ui, sans-serif;
+    letter-spacing: .28em; text-transform: uppercase;
+    transition: opacity .3s ease; z-index: 2;
+  }
+  #splash.gone { opacity: 0; pointer-events: none; }
+  #splash .ring {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 2px solid rgba(201,162,39,.25); border-top-color: #C9A227;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { #splash .ring { animation: none; } }
+  #splash small {
+    letter-spacing: .08em; text-transform: none; font-weight: 400;
+    color: #8a8271; max-width: 30ch; text-align: center;
+  }
+  #splash a { color: #C9A227; }
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="ring"></div>
+  <div>Classic</div>
+  <small id="note"></small>
+</div>
+<iframe id="app" title="Classic Admin Portal" allow="clipboard-write"></iframe>
+<noscript><a href="__EXEC_URL__" style="color:#C9A227">Open the portal</a></noscript>
+<script>
+  var EXEC_URL = '__EXEC_URL__';
+  var app = document.getElementById('app');
+  var splash = document.getElementById('splash');
+  if (EXEC_URL.indexOf('__') === 0) {
+    document.querySelector('#splash .ring').style.display = 'none';
+    document.getElementById('note').textContent =
+      'Not wired up yet: run deploy-mobile.sh to point this page at the portal.';
+  } else {
+    app.src = EXEC_URL;
+    app.addEventListener('load', function () {
+      app.classList.add('ready');
+      splash.classList.add('gone');
+    });
+    // Safety net: never strand the splash if the load event is swallowed.
+    setTimeout(function () {
+      app.classList.add('ready');
+      splash.classList.add('gone');
+    }, 8000);
+  }
+</script>
+</body>
+</html>
