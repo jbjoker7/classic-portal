@@ -16,12 +16,16 @@
   html, body { height: 100%; margin: 0; background: #0D0B07; }
   /* Safe-area insets are not exposed inside the portal's iframe, so the
      wrapper keeps the frame clear of the notch and the home indicator and
-     the portal's bottom tab bar sits right above the home bar. */
+     the portal's bottom tab bar sits right above the home bar.
+     The size has to be spelled out. An iframe does not stretch between
+     top/bottom/left/right like a div does: width/height auto falls back to
+     the 300x150 iframe default and the portal ends up in a corner. */
   #app {
     position: fixed;
-    top: env(safe-area-inset-top, 0px); bottom: env(safe-area-inset-bottom, 0px);
-    left: env(safe-area-inset-left, 0px); right: env(safe-area-inset-right, 0px);
-    width: auto; height: auto;
+    top: env(safe-area-inset-top, 0px);
+    left: env(safe-area-inset-left, 0px);
+    width: calc(100% - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    height: calc(100% - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     border: 0; background: #0D0B07; opacity: 0; transition: opacity .25s ease;
   }
   #app.ready { opacity: 1; }
